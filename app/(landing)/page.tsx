@@ -9,6 +9,7 @@ export default function Page() {
             <h1 className="text-5xl text-center mt-16 font-extrabold">
                 Build your AI powered <br />second brain using <Cover>Brain Cloud</Cover>
             </h1>
+            
             <Image
                 src="/output.png"
                 alt="Hero"
