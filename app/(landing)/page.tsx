@@ -39,7 +39,7 @@ export default function Page() {
                 }}
                 className="mt-8 h-[20rem] bg-gradient-to-br from-slate-300 to-slate-500 py-4 bg-clip-text text-center text-4xl font-medium tracking-tight text-transparent md:text-7xl"
               >
-                <h1 className="text-4xl text-center font-extrabold">
+                <div className="text-4xl text-center font-extrabold">
                   <span className="inline-block">
                     <TypewriterEffectSmooth words={words}/>
                   </span>
@@ -55,7 +55,7 @@ export default function Page() {
                   </span>
                   <br />
                   <span className="inline-block mb-3"></span>
-                </h1>
+                </div>
               </motion.h1>
             </div>
           </div>
