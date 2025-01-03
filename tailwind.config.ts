@@ -15,6 +15,9 @@ const config = {
   ],
   theme: {
     extend: {
+      boxShadow:{
+        input: `0px 2px 3px -1px rgba(0,0,0,0.1), 0px 1px 0px 0px rgba(25,28,33,0.02), 0px 0px 0px 1px rgba(25,28,33,0.08)`,
+      },
       keyframes: {
         float: {
           '0%, 100%': { transform: 'translateY(0)' },
@@ -30,10 +33,27 @@ const config = {
             transform: "translate(-50%,-40%) scale(1)",
           },
         },
+        shimmer: {
+          from: {
+            backgroundPosition: "0 0",
+          },
+          to: {
+            backgroundPosition: "-200% 0",
+          },
+        },
+        aurora: {
+          from: {
+            backgroundPosition: "50% 50%, 50% 50%",
+          },
+          to: {
+            backgroundPosition: "350% 50%, 350% 50%",
+          },
+        },
       },
       animation: {
         float: 'float 3s ease-in-out infinite',
         spotlight: "spotlight 2s ease .75s 1 forwards",
+        shimmer: "shimmer 2s linear infinite",
       },
       colors: {
         background: 'hsl(var(--background))',
