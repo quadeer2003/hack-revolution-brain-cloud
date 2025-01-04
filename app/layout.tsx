@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { GeistMono } from 'geist/font/mono';
-
+import {UserContextProvider} from "./contexts/UserContext";
 import "./globals.css";
 
 
@@ -19,7 +19,10 @@ export default function RootLayout({
       <body
         className={GeistMono.className}
       >
-        {children}
+        <UserContextProvider >
+          {children}
+        </UserContextProvider>
+        
       </body>
     </html>
   );

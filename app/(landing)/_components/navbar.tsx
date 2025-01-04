@@ -1,3 +1,5 @@
+"use client"
+
 import { ModeToggle } from "@/components/ui/mode-toggle";
 
 const Navbar = () => {

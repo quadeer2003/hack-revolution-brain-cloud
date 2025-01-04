@@ -1,3 +1,5 @@
+"use client"
+
 import { Cover } from "@/components/ui/cover";
 import Image from "next/image";
 export default function Page() {   
