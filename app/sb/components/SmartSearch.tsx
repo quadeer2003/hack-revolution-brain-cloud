@@ -5,7 +5,7 @@ import { databases, storage, DATABASE_ID, COLLECTION_ID, STORAGE_BUCKET_ID, Page
 import { Query } from 'appwrite';
 import { useAuth } from './../../context/AuthContext';
 import NoteViewer from './NoteViewer';
-// import { enhanceSearch, summarizeContent } from '../lib/gemini';
+import { enhanceSearch, summarizeContent } from '@/lib/gemini';
 
 interface Tag {
   id: string;
@@ -206,20 +206,20 @@ export default function SmartSearch() {
     }
     
     setIsLoading(true);
-  //   try {
-  //     console.log('Generating summary for content length:', contentToSummarize.length);
-  //     const summary = await summarizeContent(contentToSummarize);
-  //     if (!summary) {
-  //       throw new Error('Failed to generate summary');
-  //     }
-  //     console.log('Summary generated, length:', summary.length);
-  //     setSummary(summary);
-  //   } catch (error) {
-  //     console.error('Error generating summary:', error);
-  //     alert('Failed to generate summary. Please try again.');
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
+    try {
+      console.log('Generating summary for content length:', contentToSummarize.length);
+      const summary = await summarizeContent(contentToSummarize);
+      if (!summary) {
+        throw new Error('Failed to generate summary');
+      }
+      console.log('Summary generated, length:', summary.length);
+      setSummary(summary);
+    } catch (error) {
+      console.error('Error generating summary:', error);
+      alert('Failed to generate summary. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
