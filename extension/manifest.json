@@ -1,0 +1,27 @@
+{
+  "manifest_version": 3,
+  "name": "Second Brain Clipper",
+  "version": "1.0",
+  "description": "Save web pages and YouTube videos to your Second Brain app",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "tabs"
+  ],
+  "host_permissions": [
+    "http://localhost:3000/*",
+    "https://cloud.appwrite.io/*",
+    "https://www.youtube.com/*",
+    "https://youtu.be/*"
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  },
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "icons": {
+    "48": "icon48.png",
+    "128": "icon128.png"
+  }
+} 
