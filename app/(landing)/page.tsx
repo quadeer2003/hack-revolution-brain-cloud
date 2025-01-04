@@ -1,9 +1,4 @@
-<<<<<<< HEAD
 "use client";
-=======
-"use client"
-
->>>>>>> tem
 import { Cover } from "@/components/ui/cover";
 import Image from "next/image";
 import { TypewriterEffectSmooth } from "@/components/ui/typewirter-effect";

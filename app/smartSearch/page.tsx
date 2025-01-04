@@ -7,8 +7,11 @@ import SearchResultsDropdown from "./_components/searchResultsDropdown";
 import BentoGridItem from "./_components/bento-grid";
 import Image from "next/image";
 import { useUser } from "../contexts/UserContext";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 function Page() {
+  const router = useRouter();
   const { user } = useUser() || {};
   const [titles, setTitles] = useState<Models.Document[]>([]);
   const [page, setPage] = useState<Models.Document | null>(null);
@@ -38,6 +41,9 @@ function Page() {
       console.error(error);
     }
   };
+  const moveLogin = async () => {
+    router.push("/login");
+  };
 
   return user ? (
     <div className=" min-h-screen flex flex-col items-center py-8">
@@ -62,9 +68,18 @@ function Page() {
     </div>
   ) : (
     <div className="bg-gray-100 min-h-screen flex items-center justify-center">
-      <p className="text-xl text-gray-700">
-        Please login to access SmartSearch
-      </p>
+      <div className="text-center">
+        <p className="text-xl text-gray-700 mb-4">
+          Please login to access{" "}
+          <span className="font-semibold">SmartSearch</span>
+        </p>
+        <Link
+          href="/login"
+          className="text-blue-500 underline font-bold hover:text-blue-700 transition duration-300"
+        >
+          Login
+        </Link>
+      </div>
     </div>
   );
 }
