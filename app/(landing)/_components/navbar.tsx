@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 "use client";
 import { useState } from "react";
+=======
+"use client"
+
+>>>>>>> tem
 import { ModeToggle } from "@/components/ui/mode-toggle";
 import { SignupFormDemo } from "@/app/(users)/signup/signup"; // Import SignupFormDemo from signup.tsx
 import { useTheme } from "next-themes";

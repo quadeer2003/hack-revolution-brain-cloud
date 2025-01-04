@@ -1,5 +1,5 @@
 // import { q } from "framer-motion/client";
-import config from "./config"
+import config from "./config";
 import { Client, Databases, Storage, Models, Query } from "appwrite";
 
 interface PageData {

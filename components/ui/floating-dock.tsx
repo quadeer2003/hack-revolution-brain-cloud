@@ -3,7 +3,11 @@
  * Desktop navbar is better positioned at the bottom
  * Mobile navbar is better positioned at bottom right.
  **/
+<<<<<<< HEAD
 
+=======
+"use client"
+>>>>>>> tem
 import { cn } from "@/lib/utils";
 import { IconLayoutNavbarCollapse } from "@tabler/icons-react";
 import {
@@ -28,8 +32,13 @@ export const FloatingDock = ({
 }) => {
   return (
     <>
+<<<<<<< HEAD
       <FloatingDockDesktop items={items} className={desktopClassName} />
       <FloatingDockMobile items={items} className={mobileClassName} />
+=======
+        <FloatingDockDesktop items={items} className={desktopClassName} />
+        <FloatingDockMobile items={items} className={mobileClassName} />
+>>>>>>> tem
     </>
   );
 };
@@ -43,12 +52,20 @@ const FloatingDockMobile = ({
 }) => {
   const [open, setOpen] = useState(false);
   return (
+<<<<<<< HEAD
     <div className={cn("relative block md:hidden", className)}>
+=======
+    <div className={cn("relative inline-block md:hidden", className)}>
+>>>>>>> tem
       <AnimatePresence>
         {open && (
           <motion.div
             layoutId="nav"
+<<<<<<< HEAD
             className="absolute bottom-full mb-2 inset-x-0 flex flex-col gap-2"
+=======
+            className="absolute bottom-full mb-2 inset-x-0 flex flex-row gap-2"
+>>>>>>> tem
           >
             {items.map((item, idx) => (
               <motion.div
@@ -79,12 +96,15 @@ const FloatingDockMobile = ({
           </motion.div>
         )}
       </AnimatePresence>
+<<<<<<< HEAD
       <button
         onClick={() => setOpen(!open)}
         className="h-10 w-10 rounded-full bg-gray-50 dark:bg-neutral-800 flex items-center justify-center"
       >
         <IconLayoutNavbarCollapse className="h-5 w-5 text-neutral-500 dark:text-neutral-400" />
       </button>
+=======
+>>>>>>> tem
     </div>
   );
 };
@@ -102,7 +122,11 @@ const FloatingDockDesktop = ({
       onMouseMove={(e) => mouseX.set(e.pageX)}
       onMouseLeave={() => mouseX.set(Infinity)}
       className={cn(
+<<<<<<< HEAD
         "mx-auto hidden md:flex h-16 gap-4 items-end  rounded-2xl bg-gray-50 dark:bg-neutral-900 px-4 pb-3",
+=======
+        "fixed left-0 top-1/2 -translate-y-1/2 flex flex-col gap-4 items-center rounded-2xl bg-gray-50 dark:bg-neutral-900 px-4 py-3",
+>>>>>>> tem
         className
       )}
     >

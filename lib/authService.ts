@@ -34,7 +34,7 @@ export class AuthService {
         name
       );
       if (userAccount) {
-        return this.login({ email, password });
+        return await this.login({ email, password });
       } else {
         return null;
       }
@@ -73,7 +73,9 @@ export class AuthService {
   // No return type expected from logout function
   async logout(): Promise<void> {
     try {
-      await this.account.deleteSession("current");
+      console.log('here')
+      await this.account.deleteSessions();
+      console.log("Logout successful.");
     } catch (err) {
       console.log("Appwrite error :: logout :: err ", err);
     }
