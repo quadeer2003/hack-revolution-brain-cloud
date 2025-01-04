@@ -24,14 +24,14 @@ interface SidebarProps {
 export default function Navbar({ activeSection, setActiveSection }: SidebarProps) {
   const { user, signOut } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const menuItems = [
-    { name: "Knowledge Base", icon: <BookOpen className="w-5 h-5" /> },
-    { name: "Smart Search", icon: <Search className="w-5 h-5" /> },
-    { name: "Add New Thought", icon: <PenLine className="w-5 h-5" /> },
-    { name: "Published Notes", icon: <Share2 className="w-5 h-5" /> },
-    { name: "PARA Space", icon: <FolderTree className="w-5 h-5" /> },
-    { name: "Canvas", icon: <Palette className="w-5 h-5" /> },
-  ];
+  // const menuItems = [
+    // { name: "Knowledge Base", icon: <BookOpen className="w-5 h-5" /> },
+    // { name: "Smart Search", icon: <Search className="w-5 h-5" /> },
+    // { name: "Add New Thought", icon: <PenLine className="w-5 h-5" /> },
+    // { name: "Published Notes", icon: <Share2 className="w-5 h-5" /> },
+    // { name: "PARA Space", icon: <FolderTree className="w-5 h-5" /> },
+    // { name: "Canvas", icon: <Palette className="w-5 h-5" /> },
+  // ];
 
   const handleLogout = async () => {
     try {
@@ -56,7 +56,7 @@ export default function Navbar({ activeSection, setActiveSection }: SidebarProps
             {/* Desktop Menu - Middle Section */}
             <div className="hidden md:flex items-center justify-center flex-1 px-8">
               <div className="flex items-center space-x-6">
-                {menuItems.map((item) => (
+                {/* {menuItems.map((item) => (
                   <button
                     key={item.name}
                     onClick={() => setActiveSection(item.name.toLowerCase())}
@@ -70,7 +70,7 @@ export default function Navbar({ activeSection, setActiveSection }: SidebarProps
                   >
                     {item.icon}
                   </button>
-                ))}
+                ))} */}
               </div>
             </div>
 
@@ -103,7 +103,7 @@ export default function Navbar({ activeSection, setActiveSection }: SidebarProps
         {/* Mobile Menu */}
         <div className={`md:hidden ${isMobileMenuOpen ? 'block' : 'hidden'}`}>
           <div className="px-2 pt-2 pb-3 space-y-1 border-t border-zinc-200 dark:border-gray-800">
-            {menuItems.map((item) => (
+            {/* {menuItems.map((item) => (
               <button
                 key={item.name}
                 onClick={() => {
@@ -120,7 +120,7 @@ export default function Navbar({ activeSection, setActiveSection }: SidebarProps
                 {item.icon}
                 <span>{item.name}</span>
               </button>
-            ))}
+            ))} */}
           </div>
         </div>
       </nav>

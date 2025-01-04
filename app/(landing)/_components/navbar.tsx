@@ -1,3 +1,4 @@
+"use client";
 import { useState } from "react";
 import { ModeToggle } from "@/components/ui/mode-toggle";
 // import { SignupFormDemo } from "@/app/(users)/signup/signup"; // Import SignupFormDemo from signup.tsx
@@ -28,11 +29,10 @@ const Navbar = () => {
 
   return (
     <header
-      className={`z-10 px-4 lg:px-6 h-14 flex items-center fixed top-0 left-0 w-full ${
+      className={`z-50 px-4 lg:px-6 h-14 flex items-center fixed top-0 left-0 w-full ${
         theme === "light" ? "bg-white" : "bg-gray-900"
       }`}
     >
-
       {/* Logo */}
       <a className="flex items-center justify-center" href="#">
         <span className="sr-only">Collabrixo</span>
@@ -49,22 +49,22 @@ const Navbar = () => {
         </button>
 
         {/* Profile Icon with Dropdown */}
-        <button 
+        <button
           className="relative text-sm font-medium hover:underline underline-offset-4"
           onClick={handleProfileClick}
         >
           <FaUser className="h-6 w-6" />
           {/* Profile dropdown */}
           {profileMenuOpen && (
-            <div className="absolute right-0 mt-2 w-48 bg-white shadow-md rounded-md border">
+            <div className="absolute right-0 mt-2 w-48 bg-white shadow-md rounded-md border z-50">
               {/* Display user info */}
               <div className="p-4">
                 <p className="font-medium">John Doe</p> {/* Replace with actual user data */}
                 <p className="text-sm text-gray-500">johndoe@example.com</p> {/* Optional: Display email */}
               </div>
               <div className="border-t p-2">
-                <button 
-                  onClick={handleLogout} 
+                <button
+                  onClick={handleLogout}
                   className="w-full text-left text-red-600 hover:bg-gray-100 p-2 rounded-md"
                 >
                   Logout
@@ -110,7 +110,7 @@ const Navbar = () => {
 
       {/* Mobile Navigation */}
       {isOpen && (
-        <nav className="absolute top-14 left-0 w-full  md:hidden">
+        <nav className="absolute top-14 left-0 w-full md:hidden">
           <div className="flex flex-col items-center gap-4 py-4">
             <button
               className="text-sm font-medium hover:underline underline-offset-4"

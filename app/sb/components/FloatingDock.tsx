@@ -15,8 +15,12 @@ interface FloatingDockProps {
 }
 
 const menuItems = [
+  { name: "Knowledge Base", icon: <BookOpen className="w-5 h-5" /> },
+  { name: "Smart Search", icon: <Search className="w-5 h-5" /> },
+  { name: "Published Notes", icon: <Share2 className="w-5 h-5" /> },
+  { name: "Add New Thought", icon: <PenLine className="w-5 h-5" /> },
     { name: "Canvas", icon: <Palette className="w-5 h-5" /> },
-  { name: "PARA Space", icon: <FolderTree className="w-5 h-5" /> },
+  // { name: "PARA Space", icon: <FolderTree className="w-5 h-5" /> },
   { name: "Graph View", icon: <Network className="w-5 h-5" /> },
 ];
 
