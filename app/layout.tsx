@@ -3,6 +3,7 @@ import "./globals.css";
 import {GeistMono} from "geist/font/mono"
 import { AuthProvider } from "./context/AuthContext";
 import { ThemeProvider } from "@/components/providers/theme-provider";
+import "@liveblocks/react-ui/styles.css";
 
 
 export const metadata: Metadata = {
