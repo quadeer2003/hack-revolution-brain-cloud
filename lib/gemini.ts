@@ -42,4 +42,39 @@ export async function suggestRelatedTopics(content: string): Promise<string[]> {
     console.error('Error suggesting topics:', error);
     return [];
   }
+}
+
+export async function generateTags(content: string): Promise<string[]> {
+  try {
+    const prompt = `Generate 5-7 relevant tags for this content. Tags should be single words or short phrases that capture key topics, concepts, and themes. Return only the tags as a comma-separated list, no other text or explanation:
+
+${content}`;
+
+    const result = await model.generateContent(prompt);
+    const tags = result.response.text()
+      .split(',')
+      .map(tag => tag.trim())
+      .filter(tag => tag.length > 0);
+    
+    return tags;
+  } catch (error) {
+    console.error('Error generating tags:', error);
+    return [];
+  }
+}
+
+export async function chatWithGemini(context: string, question: string): Promise<string> {
+  try {
+    const prompt = `Context: ${context}
+
+Question: ${question}
+
+Please provide a helpful response based on the context above.`;
+
+    const result = await model.generateContent(prompt);
+    return result.response.text().trim();
+  } catch (error) {
+    console.error('Error in chat:', error);
+    return 'Sorry, I encountered an error processing your request.';
+  }
 } 

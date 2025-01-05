@@ -5,7 +5,10 @@ import { databases, storage, DATABASE_ID, COLLECTION_ID, STORAGE_BUCKET_ID, Page
 import { Query } from 'appwrite';
 import { useAuth } from './../../context/AuthContext';
 import NoteViewer from './NoteViewer';
-import { enhanceSearch, summarizeContent } from '@/lib/gemini';
+import { enhanceSearch, summarizeContent, generateTags } from '@/lib/gemini';
+import { Badge } from "@/components/ui/badge";
+import ChatPopup from './ChatPopup';
+import { Button } from "@/components/ui/button";
 
 interface Tag {
   id: string;
@@ -28,6 +31,7 @@ export default function SmartSearch() {
   const [summary, setSummary] = useState<string>('');
   const [isLoading, setIsLoading] = useState(false);
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const [showChat, setShowChat] = useState(false);
 
   // Fetch all notes for suggestions
   useEffect(() => {
@@ -39,14 +43,15 @@ export default function SmartSearch() {
           COLLECTION_ID,
           [
             Query.equal('userId', user.$id),
-            Query.limit(100)  // Increase limit to get more notes
+            Query.limit(100)
           ]
         );
         
-        // Process each note to ensure we have content
+        // Process each note to ensure we have content and tags
         const notes = response.documents.map(doc => ({
           ...doc,
-          content: doc.content || doc.blocksData || ''  // Fallback to blocksData if content is missing
+          content: doc.content || doc.blocksData || '',
+          tags: doc.tags || '[]'  // Ensure tags is at least an empty array string
         })) as PageData[];
         
         setAllNotes(notes);
@@ -78,10 +83,29 @@ export default function SmartSearch() {
     // Handle @ mentions
     const lastAtIndex = value.lastIndexOf('@');
     if (lastAtIndex !== -1) {
-      const searchAfterAt = value.slice(lastAtIndex + 1);
-      const filtered = allNotes.filter(note => 
-        note.title.toLowerCase().includes(searchAfterAt.toLowerCase())
-      );
+      const searchAfterAt = value.slice(lastAtIndex + 1).toLowerCase();
+      
+      // Filter notes based on title, content, or tags
+      const filtered = allNotes.filter(note => {
+        // Check title
+        const titleMatch = note.title.toLowerCase().includes(searchAfterAt);
+        
+        // Check tags if they exist
+        let tagMatch = false;
+        if (note.tags) {
+          try {
+            const noteTags = JSON.parse(note.tags);
+            tagMatch = noteTags.some((tag: string) => 
+              tag.toLowerCase().includes(searchAfterAt)
+            );
+          } catch (error) {
+            console.error('Error parsing tags:', error);
+          }
+        }
+
+        return titleMatch || tagMatch;
+      });
+
       setFilteredSuggestions(filtered);
       setShowSuggestions(true);
     } else {
@@ -98,7 +122,17 @@ export default function SmartSearch() {
         note.$id
       ) as PageData;
       
-      console.log('Full note loaded:', fullNote);
+      // Parse metadata from metadataStr if it exists
+      const metadata = fullNote.metadataStr ? JSON.parse(fullNote.metadataStr) : null;
+      console.log('Parsed metadata:', metadata);
+
+      // Update the note with parsed metadata
+      const noteWithMetadata = {
+        ...fullNote,
+        metadata: metadata
+      };
+      
+      console.log('Full note with metadata:', noteWithMetadata);
       let noteContent = '';
 
       // First check blocksData for file content
@@ -147,13 +181,13 @@ export default function SmartSearch() {
       if (!noteContent) {
         noteContent = 'No content available';
       }
-      fullNote.content = noteContent;
+      noteWithMetadata.content = noteContent;
       console.log('Final note content:', {
         length: noteContent.length,
         preview: noteContent.substring(0, 100)
       });
       
-      setMentionedNote(fullNote);
+      setMentionedNote(noteWithMetadata);
       setShowSuggestions(false);
       setSearchQuery(`@${note.title}`);
     } catch (error) {
@@ -207,6 +241,7 @@ export default function SmartSearch() {
     
     setIsLoading(true);
     try {
+      // Generate summary
       console.log('Generating summary for content length:', contentToSummarize.length);
       const summary = await summarizeContent(contentToSummarize);
       if (!summary) {
@@ -214,9 +249,38 @@ export default function SmartSearch() {
       }
       console.log('Summary generated, length:', summary.length);
       setSummary(summary);
+
+      // Generate and save tags
+      const tags = await generateTags(contentToSummarize);
+      console.log('Generated tags:', tags);
+
+      if (tags.length > 0) {
+        try {
+          // Update the document in Appwrite
+          const updatedNote = await databases.updateDocument(
+            DATABASE_ID,
+            COLLECTION_ID,
+            mentionedNote.$id,
+            {
+              tags: JSON.stringify(tags)
+            }
+          );
+          console.log('Tags saved successfully:', updatedNote);
+
+          // Update local state
+          setMentionedNote(prev => prev ? {
+            ...prev,
+            tags: JSON.stringify(tags)
+          } : null);
+        } catch (error) {
+          console.error('Error saving tags to database:', error);
+          throw error;
+        }
+      }
+
     } catch (error) {
-      console.error('Error generating summary:', error);
-      alert('Failed to generate summary. Please try again.');
+      console.error('Error in summary/tags generation:', error);
+      alert('Failed to generate summary and tags. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -263,6 +327,24 @@ export default function SmartSearch() {
                 >
                   <div className="font-medium">{note.title}</div>
                   <div className="text-xs text-gray-500 dark:text-gray-400">{note.category}</div>
+                  {note.tags && (
+                    <div className="flex flex-wrap gap-1 mt-1">
+                      {JSON.parse(note.tags).map((tag: string, index: number) => (
+                        <Badge 
+                          key={index} 
+                          variant="secondary" 
+                          className={`text-xs ${
+                            searchQuery.slice(1).toLowerCase() && 
+                            tag.toLowerCase().includes(searchQuery.slice(1).toLowerCase())
+                              ? 'bg-blue-100 dark:bg-blue-900'
+                              : ''
+                          }`}
+                        >
+                          {tag}
+                        </Badge>
+                      ))}
+                    </div>
+                  )}
                 </button>
               ))}
             </div>
@@ -314,7 +396,17 @@ export default function SmartSearch() {
             </div>
           ) : summary ? (
             <div className="prose dark:prose-invert max-w-none">
-              <h4 className="text-lg font-medium mb-2">Summary:</h4>
+              <div className="flex items-center justify-between mb-2">
+                <h4 className="text-lg font-medium">Summary:</h4>
+                <Button
+                  onClick={() => setShowChat(true)}
+                  variant="outline"
+                  size="sm"
+                  className="ml-2"
+                >
+                  Chat about this
+                </Button>
+              </div>
               <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
                 <p className="text-gray-600 dark:text-gray-300">{summary}</p>
               </div>
@@ -331,7 +423,60 @@ export default function SmartSearch() {
               )}
             </div>
           )}
+
+          {summary && mentionedNote?.metadata?.image && (
+            console.log('Rendering image with metadata:', mentionedNote.metadata),
+            <div className="mt-4">
+              <h4 className="text-lg font-medium mb-2">Preview Image:</h4>
+              <div className="relative w-full aspect-[16/9] bg-muted rounded-lg overflow-hidden">
+                <div className="absolute inset-0 flex items-center justify-center">
+                  {/* Loading placeholder */}
+                  <div className="animate-pulse bg-gray-200 dark:bg-gray-700 w-full h-full" />
+                </div>
+                <img
+                  src={mentionedNote.metadata.image}
+                  alt={mentionedNote.title}
+                  className="absolute inset-0 w-full h-full object-cover transition-opacity duration-300"
+                  loading="lazy"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.parentElement?.classList.add('hidden');
+                  }}
+                  onLoad={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.style.opacity = '1';
+                  }}
+                  style={{ opacity: 0 }}
+                />
+              </div>
+            </div>
+          )}
+
+          {summary && mentionedNote?.tags && (
+            <div className="mt-4">
+              <h4 className="text-lg font-medium mb-2">Tags:</h4>
+              <div className="flex flex-wrap gap-2">
+                {JSON.parse(mentionedNote.tags).map((tag: string, index: number) => (
+                  <Badge 
+                    key={index} 
+                    variant="secondary"
+                    className="text-sm"
+                  >
+                    {tag}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
+      )}
+
+      {/* Add Chat Popup */}
+      {showChat && (
+        <ChatPopup
+          content={mentionedNote?.content || ''}
+          onClose={() => setShowChat(false)}
+        />
       )}
     </div>
   );
