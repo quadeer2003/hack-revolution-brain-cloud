@@ -17,12 +17,13 @@ import ReactFlow, {
   Handle,
   Position,
   ConnectionMode,
+  MiniMap
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import { ID } from 'appwrite';
 import { storage } from '@/lib/conf';
 import { STORAGE_BUCKET_ID } from '@/lib/conf';
-
+// import 
 interface Note {
   $id: string;
   title: string;
@@ -402,6 +403,7 @@ export default function Canvas() {
               >
                 <Background color="#aaa" gap={20} />
                 <Controls />
+                <MiniMap/>
               </ReactFlow>
             </div>
           </div>
