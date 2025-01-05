@@ -2,7 +2,7 @@
 import { useState } from "react";
 import Sidebar from "./components/sb-navbar";
 import FloatingDock from "./components/FloatingDock";
-import Dashboard from "./components/Dashboard";
+// import Dashboard from "./components/Dashboard";
 import Explore from "./components/Explore";
 import AddThought from "./components/AddThought";
 import PublishedNotes from "./components/PublishedNotes";
@@ -12,7 +12,7 @@ import Login from "./components/Login";
 import Canvas from "./components/Canvas";
 import SmartSearch from "./components/SmartSearch";
 import GraphView from "./components/GraphView";
-// import { DotPattern } from "../components/ui/dot-pattern"; 
+import { DotPattern } from "@/components/ui/dot-pattern"; 
 // Mock data - replace with actual data from your backend
 const mockStats = {
   totalItems: 42,
@@ -35,8 +35,8 @@ export default function Home() {
 
   const renderContent = () => {
     switch (activeSection) {
-      case "dashboard":
-        return <Dashboard stats={mockStats} />;
+      // case "dashboard":
+      //   return <Dashboard stats={mockStats} />;
       case "knowledge base":
         return <Explore />;
       case "smart search":
@@ -51,19 +51,19 @@ export default function Home() {
         return <Canvas />;
       case "graph view":
         return <GraphView />;
-      default:
-        return <Dashboard stats={mockStats} />;
+      // default:
+      //   return <Dashboard stats={mockStats} />;
     }
   };
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-950">
-      {/* <DotPattern 
-            className="dark:hidden"
+      <DotPattern 
+            className=""
             width={16}
             height={16}
-            radius={1}
-          /> */}
+            radius={4}
+          />
       <Sidebar activeSection={activeSection} setActiveSection={setActiveSection} />
       <FloatingDock activeSection={activeSection} setActiveSection={setActiveSection} />
       <main className="w-full max-w-7xl mx-auto px-4 py-6 mt-4">

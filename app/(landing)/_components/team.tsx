@@ -4,10 +4,10 @@ export function Team() {
   const testimonials = [
     {
       quote:
-        "Mohammed Shoiab Asim has a keen eye for detail and innovation. His work on Canva-like UI components has set a new standard for design and usability, seamlessly blending functionality with aesthetic appeal.",
-      name: "Mohammed Shoiab Asim",
+        "Mohammed Shoaib Asim has a keen eye for detail and innovation. His work on Canva-like UI components has set a new standard for design and usability, seamlessly blending functionality with aesthetic appeal.",
+      name: "Mohammed Shoaib Asim",
       designation: "Working on Canva component",
-      src: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      src: "/sho.jpeg",
     },
     {
       quote:
@@ -21,7 +21,7 @@ export function Team() {
         "Mohd Abdul Quadeer has revolutionized our processes with his exceptional work on Chrome extensions and backend systems. His solutions are intuitive and efficient, significantly enhancing our team's productivity.",
       name: "Mohd Abdul Quadeer",
       designation: "Chrome Extension and Backend",
-      src: "https://images.unsplash.com/photo-1623582854588-d60de57fa33f?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      src: "/quadeer.png",
     },
     {
       quote:

@@ -210,15 +210,24 @@ export default function GraphView() {
         const response = await databases.listDocuments(
           DATABASE_ID,
           COLLECTION_ID,
-          [Query.equal('userId', user.$id)]
+          [
+            Query.equal('userId', user.$id),
+            Query.orderAsc('$createdAt')
+          ]
         );
 
         const notes = response.documents as unknown as Note[];
-        const sortedNotes = notes.sort(
-          (a, b) => new Date(a.$createdAt).getTime() - new Date(b.$createdAt).getTime()
-        );
+        
+        // Create a map of categories to their earliest note's creation date
+        const categoryDates = new Map<string, string>();
+        notes.forEach(note => {
+          if (!categoryDates.has(note.category) || 
+              new Date(note.$createdAt) < new Date(categoryDates.get(note.category)!)) {
+            categoryDates.set(note.category, note.$createdAt);
+          }
+        });
 
-        const categories = Array.from(new Set(sortedNotes.map(note => note.category)));
+        const categories = Array.from(new Set(notes.map(note => note.category)));
         const newNodes: Node[] = [];
         const newEdges: Edge[] = [];
 
@@ -228,27 +237,36 @@ export default function GraphView() {
         const radius = Math.max(200, categories.length * 50);
         const angleStep = (2 * Math.PI) / categories.length;
 
-        // Add category nodes first
+        // Create all nodes first (both categories and notes)
+        const allNodes: Array<{
+          nodeData: Node,
+          createdAt: string
+        }> = [];
+
+        // Add category nodes with their earliest note date
         categories.forEach((category, index) => {
           const angle = index * angleStep;
           const x = centerX + radius * Math.cos(angle);
           const y = centerY + radius * Math.sin(angle);
-
           const categoryId = `category-${category}`;
-          newNodes.push({
-            id: categoryId,
-            type: 'noteNode',
-            position: { x, y },
-            data: { 
-              label: category, 
-              isCategory: true,
-              index: index
+
+          allNodes.push({
+            nodeData: {
+              id: categoryId,
+              type: 'noteNode',
+              position: { x, y },
+              data: { 
+                label: category, 
+                isCategory: true,
+                index: 0  // Will be set after sorting
+              },
             },
+            createdAt: categoryDates.get(category)!
           });
         });
 
-        // Add note nodes and create edges
-        sortedNotes.forEach((note, index) => {
+        // Add note nodes
+        notes.forEach((note) => {
           const categoryIndex = categories.indexOf(note.category);
           const angle = categoryIndex * angleStep + (Math.random() - 0.5);
           const distance = radius * 0.6 * (1 + Math.random() * 0.2);
@@ -256,23 +274,23 @@ export default function GraphView() {
           const x = centerX + distance * Math.cos(angle);
           const y = centerY + distance * Math.sin(angle);
 
-          const nodeId = note.$id;
-          
-          // Add note node
-          newNodes.push({
-            id: nodeId,
-            type: 'noteNode',
-            position: { x, y },
-            data: { 
-              label: note.title,
-              index: categories.length + index
+          allNodes.push({
+            nodeData: {
+              id: note.$id,
+              type: 'noteNode',
+              position: { x, y },
+              data: { 
+                label: note.title,
+                index: 0  // Will be set after sorting
+              },
             },
+            createdAt: note.$createdAt
           });
 
-          // Create edge from note to category
+          // Create edge
           newEdges.push({
-            id: `edge-${nodeId}`,
-            source: nodeId,
+            id: `edge-${note.$id}`,
+            source: note.$id,
             target: `category-${note.category}`,
             type: 'straight',
             animated: true,
@@ -284,18 +302,45 @@ export default function GraphView() {
           });
         });
 
+        // Sort all nodes - categories first, then notes by creation date
+        allNodes.sort((a, b) => {
+          // If both are categories or both are notes, sort by creation date
+          if (a.nodeData.data.isCategory === b.nodeData.data.isCategory) {
+            return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+          }
+          // If one is category and other is note, category comes first
+          return a.nodeData.data.isCategory ? -1 : 1;
+        });
+
+        // Add debug log
+        console.log('Nodes in order:', allNodes.map(node => ({
+          label: node.nodeData.data.label,
+          isCategory: node.nodeData.data.isCategory,
+          createdAt: node.createdAt,
+          timestamp: new Date(node.createdAt).getTime()
+        })));
+
+        // Assign animation indices based on sorted order
+        const finalNodes = allNodes.map((node, index) => ({
+          ...node.nodeData,
+          data: {
+            ...node.nodeData.data,
+            index
+          }
+        }));
+
         // Store edges for later
         edgesData.current = newEdges;
 
         // Set nodes immediately
-        setNodes(newNodes);
+        setNodes(finalNodes);
         setIsLoading(false);
 
         // Calculate total animation duration and set edges after all nodes are visible
-        const totalNodes = newNodes.length;
+        const totalNodes = finalNodes.length;
         const lastNodeDelay = (totalNodes - 1) * ANIMATION_DELAY_PER_NODE;
-        const lastNodeAnimationDuration = 0.8; // Same as the node animation duration
-        const totalDelay = lastNodeDelay + lastNodeAnimationDuration + 0.5; // Add extra 0.5s buffer
+        const lastNodeAnimationDuration = 0.8;
+        const totalDelay = lastNodeDelay + lastNodeAnimationDuration + 0.5;
 
         setTimeout(() => {
           setShowEdges(true);

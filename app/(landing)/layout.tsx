@@ -9,7 +9,7 @@ export default function landing({
   }>) {
     return (
       <div>
-        <main >
+        <main className="bg-dots" >
         
             <Navbar/>
           {children}

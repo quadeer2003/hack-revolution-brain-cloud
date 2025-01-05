@@ -10,6 +10,7 @@ import { Team } from "./_components/team";
 import Footer from "./_components/footer";
 import GradualSpacing from "@/components/ui/gradual-spacing";
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 export default function Page() {
   const words = [
@@ -57,9 +58,11 @@ export default function Page() {
                   </span>
                   <br />
                   <span className="inline-block mt-2">
-                    <button className="text-2xl inline-flex h-12 animate-shimmer items-center justify-center rounded-full border border-slate-800 bg-[linear-gradient(110deg,#000103,45%,#1e2631,55%,#000103)] bg-[length:200%_100%] px-6 font-medium text-slate-400 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50">
-                      Get Started
-                    </button>
+                    
+                      <button className="text-2xl inline-flex h-12 animate-shimmer items-center justify-center rounded-full border border-slate-800 bg-[linear-gradient(110deg,#000103,45%,#1e2631,55%,#000103)] bg-[length:200%_100%] px-6 font-medium text-slate-400 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50">
+                      <Link href="/sb">Get Started </Link>
+                      </button>
+                   
                   </span>
                   <br />
                   <span className="inline-block mb-3"></span>
@@ -71,10 +74,10 @@ export default function Page() {
       >
         <div className="mt-0">
           <Image
-            src="/output.png"
+            src="/hero.png"
             alt="Hero"
-            width={500}
-            height={500}
+            width={1200}
+            height={1200}
             className="mx-auto mt-0"
           />
         </div>
@@ -103,10 +106,10 @@ export default function Page() {
               AI powered Second Brain
             </p>
             <ul className="list-none space-y-2 mb-4 text-center pb-8">
-              <li>Lorem ipsum dolor sit amet consectetur adipisicing elit.</li>
-              <li>Lorem ipsum dolor sit amet consectetur adipisicing elit.</li>
-              <li>Lorem ipsum dolor sit amet consectetur adipisicing elit.</li>
-              <li>Lorem ipsum dolor sit amet consectetur adipisicing elit.</li>
+              <li>Interactive Canvas with Category Filtering</li>
+              <li>Publish saved pages and start threads for discussions</li>
+              <li>Graph view for pages</li>
+              <li>Smart Search to query pages</li>
             </ul>
             <button className="mt-4 px-6 py-2 pl-8 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition mx-auto block">
               Subscribe
