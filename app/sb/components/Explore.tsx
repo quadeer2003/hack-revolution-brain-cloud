@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
-import { Trash2 } from "lucide-react";
+import { Trash2, Link } from "lucide-react";
 
 export default function Explore() {
   const { user } = useAuth();
@@ -208,6 +208,19 @@ export default function Explore() {
           >
             {/* Action Buttons */}
             <div className="absolute top-1 right-1 flex gap-1 z-10">
+              {note.metadata?.url && (
+                <Button
+                  variant="secondary"
+                  size="icon"
+                  className="h-7 w-7 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    window.open(note.metadata.url, '_blank');
+                  }}
+                >
+                  <Link className="h-3 w-3" />
+                </Button>
+              )}
               <Button
                 variant="secondary"
                 size="icon"

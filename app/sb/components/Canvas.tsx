@@ -416,6 +416,19 @@ export default function Canvas() {
           note={selectedNote}
           onClose={() => setSelectedNote(null)}
           onUpdate={handleNoteUpdate}
+          nextNotes={edges
+            .filter(edge => edge.source === selectedNote.$id)
+            .map(edge => {
+              const targetNote = notes.find(n => n.$id === edge.target);
+              return targetNote ? {
+                id: targetNote.$id,
+                title: targetNote.title,
+                onClick: () => {
+                  setSelectedNote(targetNote);
+                }
+              } : null;
+            })
+            .filter(Boolean)}
         />
       )}
     </div>

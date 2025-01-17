@@ -69,6 +69,7 @@ export async function chatWithGemini(context: string, question: string): Promise
 
 Question: ${question}
 
+
 Please provide a helpful response based on the context above.`;
 
     const result = await model.generateContent(prompt);

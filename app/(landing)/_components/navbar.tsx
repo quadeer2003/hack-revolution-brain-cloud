@@ -30,7 +30,7 @@ const Navbar = () => {
   return (
     <header
       className={`z-50 px-4 lg:px-6 h-14 flex items-center fixed top-0 left-0 w-full ${
-        theme === "light" ? "bg-white" : "bg-gray-900"
+        theme === "light" ? "bg-white" : "bg-transparent"
       }`}
     >
       {/* Logo */}

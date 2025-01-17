@@ -3,27 +3,24 @@ import { BlockNoteEditor, PartialBlock } from "@blocknote/core";
 import { BlockNoteView, lightDefaultTheme, darkDefaultTheme } from "@blocknote/mantine";
 import { useBlockNote } from "@blocknote/react";
 import { useState, useEffect } from "react";
-import { uploadFile, updatePage, storage, STORAGE_BUCKET_ID } from "@/lib/conf";
+import { uploadFile, updatePage, storage, STORAGE_BUCKET_ID, PageData } from "@/lib/conf";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, Save, X, Edit, Calendar } from "lucide-react";
+import { Loader2, Save, X, Edit, Calendar, ArrowRight } from "lucide-react";
 import { useTheme } from "next-themes";
+import { toast } from "@/components/ui/use-toast";
 
 interface NoteViewerProps {
-  note: {
-    $id: string;
-    title: string;
-    content: string;
-    userId: string;
-    category?: string;
-    createdAt?: string;
-    blocks?: PartialBlock[];
-    blocksData?: string;
-  };
+  note: PageData;
   onClose: () => void;
-  onUpdate?: (updatedNote: any) => void;
+  onUpdate?: (note: PageData) => void;
+  nextNotes?: Array<{
+    id: string;
+    title: string;
+    onClick: () => void;
+  }>;
 }
 
 const DEFAULT_BLOCK: PartialBlock = {
@@ -31,7 +28,7 @@ const DEFAULT_BLOCK: PartialBlock = {
   content: "Loading content..."
 };
 
-export default function NoteViewer({ note, onClose, onUpdate }: NoteViewerProps) {
+export default function NoteViewer({ note, onClose, onUpdate, nextNotes }: NoteViewerProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [title, setTitle] = useState(note.title);
   const [blocks, setBlocks] = useState<PartialBlock[]>([DEFAULT_BLOCK]);
@@ -214,34 +211,60 @@ export default function NoteViewer({ note, onClose, onUpdate }: NoteViewerProps)
     }
   };
 
+  const handleClose = () => {
+    if (nextNotes && nextNotes.length > 0) {
+      toast({
+        title: "Connected Notes",
+        description: (
+          <div className="flex flex-col gap-2">
+            <p>This note is connected to:</p>
+            {nextNotes.map(nextNote => (
+              <Button
+                key={nextNote.id}
+                variant="outline"
+                size="sm"
+                onClick={nextNote.onClick}
+                className="justify-start"
+              >
+                {nextNote.title} →
+              </Button>
+            ))}
+          </div>
+        ),
+        duration: 5000,
+      });
+    }
+    onClose();
+  };
+
   return (
-    <Dialog open onOpenChange={onClose}>
+    <Dialog open onOpenChange={handleClose}>
       <DialogContent className="max-w-4xl w-[95vw] max-h-[95vh] flex flex-col">
         <DialogHeader className="border-b pb-4">
+          <DialogTitle className="sr-only">
+            {note.title}
+          </DialogTitle>
           <div className="flex flex-col gap-4">
-            <div className="flex items-center justify-between">
-              {isEditing ? (
-                <Input
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  className="text-lg font-bold"
-                  placeholder="Note title..."
-                />
-              ) : (
-                <DialogTitle className="text-xl font-bold">{title}</DialogTitle>
-              )}
-              <div className="flex items-center gap-2">
-                {note.category && (
-                  <Badge variant="secondary" className="text-sm">
-                    {note.category}
-                  </Badge>
-                )}
-                {note.createdAt && (
-                  <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                    <Calendar className="h-4 w-4" />
-                    {new Date(note.createdAt).toLocaleDateString()}
-                  </div>
-                )}
+            <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+              <h2 className="text-3xl font-bold">{note.title}</h2>
+              <div className="flex items-center gap-4">
+                {nextNotes && nextNotes.map(nextNote => (
+                  <Button
+                    key={nextNote.id}
+                    variant="outline"
+                    onClick={nextNote.onClick}
+                    className="flex items-center gap-2"
+                  >
+                    {nextNote.title}
+                    <ArrowRight className="h-4 w-4" />
+                  </Button>
+                ))}
+                <button
+                  onClick={handleClose}
+                  className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full"
+                >
+                  ✕
+                </button>
               </div>
             </div>
           </div>
@@ -301,7 +324,7 @@ export default function NoteViewer({ note, onClose, onUpdate }: NoteViewerProps)
               <>
                 <Button
                   variant="outline"
-                  onClick={onClose}
+                  onClick={handleClose}
                 >
                   <X className="h-4 w-4 mr-2" />
                   Close

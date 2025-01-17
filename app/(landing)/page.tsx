@@ -29,7 +29,7 @@ export default function Page() {
   ];
 
   return (
-    <div className="w-full overflow-x-hidden">  
+    <div className="w-full overflow-x-hidden">
       <ContainerScroll
         titleComponent={
           <div className="w-full mx-auto">
@@ -37,7 +37,7 @@ export default function Page() {
               className="-top-40 left-0 md:left-60 md:-top-20"
               fill="white"
             />
-            <div className="flex justify-center items-center h-auto px-4">
+            <div className="flex justify-center items-center  px-4">
               <motion.div
                 initial={{ opacity: 0.5, y: 100 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -46,35 +46,41 @@ export default function Page() {
                   duration: 0.8,
                   ease: "easeInOut",
                 }}
-                className="mt-8 h-[20rem] bg-gradient-to-br from-slate-300 to-slate-500 py-4 bg-clip-text text-center text-4xl font-medium tracking-tight text-transparent md:text-7xl"
+                className="mt-0 h-[30rem] bg-gradient-to-br from-slate-300 to-slate-500 py-1 bg-clip-text text-center text-xl font-medium tracking-tight text-transparent md:text-xl"
               >
-                <h1 className="text-3xl sm:text-4xl text-center font-extrabold">
-                  <span className="inline-block">
+                <div className="text-xl sm:text-xl text-center font-extrabold mb-0">
+                  <div className="inline-block mt-0" >
                     <TypewriterEffectSmooth words={words} />
-                  </span>
-                  <br />
-                  <span className="inline-block dark:text-white text-black">
+                  </div>
+                  {/* <br /> */}
+                  <div className="inline-block dark:text-white text-black mt-0 text-5xl">
                     second brain using <Cover>Brain Cloud</Cover>
-                  </span>
-                  <br />
-                  <span className="inline-block mt-2">
-                    
-                      <button className="text-2xl inline-flex h-12 animate-shimmer items-center justify-center rounded-full border border-slate-800 bg-[linear-gradient(110deg,#000103,45%,#1e2631,55%,#000103)] bg-[length:200%_100%] px-6 font-medium text-slate-400 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50">
+                  </div>
+                  {/* <br /> */}
+                  <p className="text-md text-gray-300 dark:text-white mt-10 font-normal">
+                    Organize your digital life with a second brain using and be 10x more productive. Capture, Organize, distill and express using our chrome extension and webapp.
+                  </p>
+                  <span className="inline-block mt-7">
+
+                    <button className="text-2xl inline-flex h-12 animate-shimmer items-center justify-center rounded-full border border-slate-800 bg-[linear-gradient(110deg,#000103,45%,#1e2631,55%,#000103)] bg-[length:200%_100%] px-6 font-medium text-slate-400 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50">
                       <Link href="/sb">Get Started </Link>
-                      </button>
-                   
+                    </button>
+
                   </span>
                   <br />
-                  <span className="inline-block mb-3"></span>
-                </h1>
+                  {/* <span className="inline-block mb-0"></span> */}
+                </div>
               </motion.div>
             </div>
           </div>
         }
       >
+        {/* <button className="text-2xl inline-flex h-12 animate-shimmer items-center justify-center rounded-full border border-slate-800 bg-[linear-gradient(110deg,#000103,45%,#1e2631,55%,#000103)] bg-[length:200%_100%] px-6 font-medium text-slate-400 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50">
+                      <Link href="/sb">Get Started </Link>
+                    </button> */}
         <div className="mt-0">
           <Image
-            src="/hero.png"
+            src="/black.png"
             alt="Hero"
             width={1200}
             height={1200}
